@@ -37,16 +37,16 @@ def distance(chars1,chars2)
 end
 
 def common_letters(a,b) 
-    a.zip(b).select { | x,y | x == y }.map { | x | x[0]}
+    a.zip(b).select { | x,y | x == y }.map &.[0]
 end
 
 def day2_2(ids)
-    split_ids = ids.map { |x | x.split("") }
+    split_ids = ids.map &.split("")
     while split_ids.size != 0
-      x = split_ids.pop
-      distances = split_ids.map {|id| {id, distance(id,x)}}
-      match = distances.select { |x | x[1] == 1}
-      return common_letters(x,  match[0][0]).join("") if match.size > 0
+        # Pop a value so that we don't check combinations twice.
+        x = split_ids.pop
+        found = split_ids.find {|id| distance(id,x) == 1}
+        return common_letters(x, found).join("") if found
     end
 end
 
