@@ -20,3 +20,17 @@ def build_claims
 end
 fabric = build_claims
 puts "Day3-1:", (fabric.map &.select { | x  | x.size > 1}.size).sum
+
+def ids(fabric)
+  fabric.flatten.uniq
+end
+
+def claimed_ids(fabric,id)
+  (fabric.map &.select { | x | x.includes? id }).flatten.uniq
+end
+
+ids(fabric).each do | id |
+  p id if claimed_ids(fabric,id).size == 1
+
+end
+
