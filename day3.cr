@@ -30,9 +30,12 @@ fabric.each do | r |
     # if cell is claimed more than once all claimants should be exluded
     cell.each { | id | IDS.delete id }
   end
+  if IDS.size == 1
+    puts "Day3-2:", IDS.first
+    exit
+  end
 end
 end
-puts "Day3-2:", IDS.first
 
 
 
