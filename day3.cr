@@ -1,5 +1,6 @@
 DIM = 1000 
 
+IDS = Set(String).new
 def build_claims
   fabric = Array.new(DIM) { |i| Array.new(DIM) { |j| Array(String).new } }
   claims = File.read_lines("input.3.txt")
@@ -12,7 +13,8 @@ def build_claims
     dx,dy  = tdx.to_i, tdy.to_i
     (x...(x+dx)).each do | x |
       (y...(y+dy)).each do | y |
-      fabric[x][y] << cid
+      fabric[x][y] << cid.strip
+      IDS << cid.strip
     end
     end
   end
@@ -21,16 +23,16 @@ end
 fabric = build_claims
 puts "Day3-1:", (fabric.map &.select { | x  | x.size > 1}.size).sum
 
-def ids(fabric)
-  fabric.flatten.uniq
-end
 
-def claimed_ids(fabric,id)
-  (fabric.map &.select { | x | x.includes? id }).flatten.uniq
+fabric.each do | r |
+  r.each do |cell|
+  if cell.size > 1
+    # if cell is claimed more than once all claimants should be exluded
+    cell.each { | id | IDS.delete id }
+  end
 end
-
-ids(fabric).each do | id |
-  p id if claimed_ids(fabric,id).size == 1
-
 end
+puts "Day3-2:", IDS.first
+
+
 
