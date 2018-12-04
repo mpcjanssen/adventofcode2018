@@ -38,8 +38,20 @@ sleepiest =  sleep_by_guard.map { | x | {(x[1].map &.sleeping.sum).sum, x[0] }}.
 p sleepiest
 sleep_per_minute =  (sleep_by_guard[sleepiest].map &.sleeping).transpose.map &.sum
 most_slept = sleep_per_minute.max
-p most_slept
 minute = sleep_per_minute.index(most_slept).not_nil!
 p minute
 numid =  sleepiest.lchop("#").to_i
 p (minute * numid)
+
+guards_min_sleep = sleep_by_guard.map { | x | {x[0], (x[1].map &.sleeping).transpose.map &.sum }}
+
+max , id =  guards_min_sleep.map { |x | {x[1].max,x[0] }}.sort.last 
+
+p id
+sleep = guards_min_sleep.find { | x | x[0] == id }.not_nil![1]
+minute = sleep.index(max).not_nil!
+p minute
+
+numid =  id.lchop("#").to_i
+p (minute * numid)
+
