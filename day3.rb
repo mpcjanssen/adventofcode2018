@@ -27,15 +27,15 @@ puts "Day3-1:", (fabric.map { | y | y.select { | x  | x.size > 1}.size} ).reduce
 
 fabric.each do | r |
   r.each do |cell|
-  if cell.size > 1
-    # if cell is claimed more than once all claimants should be exluded
-    cell.each { | id | $IDS.delete id }
+    if cell.size > 1
+      # if cell is claimed more than once all claimants should be exluded
+      cell.each { | id | $IDS.delete id }
+    end
+    if $IDS.size == 1
+      puts "Day3-2:", $IDS.first
+      exit
+    end
   end
-  if $IDS.size == 1
-    puts "Day3-2:", $IDS.first
-    exit
-  end
-end
 end
 
 
