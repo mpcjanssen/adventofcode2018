@@ -1,15 +1,17 @@
 require 'set'
+
 DIM = 1000
 
-$ids = Set.new
+
 def build_claims
+  ids = Set.new
   fabric = Array.new(DIM) { Array.new(DIM) { [] } }
   claims = File.readlines('input.3.txt')
   claims.each do |claim|
     cid, coords = claim.split('@')
     orig, size =  coords.split(':')
-    tx,ty = orig.strip.split(',')
-    tdx,tdy = size.strip.split('x')
+    tx, ty = orig.strip.split(',')
+    tdx, tdy = size.strip.split('x')
     x = tx.to_i
     y = ty.to_i
     dx = tdx.to_i
@@ -17,13 +19,13 @@ def build_claims
     (x...(x + dx)).each do |cx|
       (y...(y + dy)).each do |cy|
         fabric[cx][cy] << cid.strip
-        $ids << cid.strip
+        ids << cid.strip
       end
     end
   end
   fabric
 end
-fabric = build_claims
+fabric, ids = build_claims
 puts 'Day3-1:', (fabric.map { |y| y.select { |x| x.size > 1 }.size }).reduce(:+)
 
 fabric.each do |r|
@@ -31,13 +33,11 @@ fabric.each do |r|
     if cell.size > 1
 
       # if cell is claimed more than once all claimants should be excluded
-      cell.each { |id| $ids.delete id }
+      cell.each { |id| ids.delete id }
     end
-    if $ids.size == 1
-      puts 'Day3-2:', $ids.first
-
+    if ids.size == 1
+      puts 'Day3-2:', ids.first
       exit
     end
   end
 end
-
