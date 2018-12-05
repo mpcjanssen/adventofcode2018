@@ -1,6 +1,6 @@
 polymer = File.read("input.5.txt").chomp
 def anti (x,y)
-  x != nil && x != y && x.upcase == y.upcase
+  !x.nil? && x != y && x.casecmp(y).zero?
 end
 
 def poly_reduce(p, ignore = "")
