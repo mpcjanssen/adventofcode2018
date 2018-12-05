@@ -4,21 +4,18 @@ def anti (x,y)
 end
 
 def poly_reduce(p, ignore = "")
-  loop do
-    work_done = false
     p = p.tr(ignore, "")
-    p = p.split('').reduce("") do |acc, c|
-      if anti(acc[-1],c) 
-        work_done = true
-        acc = acc[0...-1] || ""
+    res = [] 
+    p.split('').each do |c|
+      if !res.empty? && anti(res[-1] , c )
+        res.pop
       else
-        acc += c
+        res << c
       end
-      acc
     end
-    break unless work_done 
-  end
-  return p
+    res
+
+  return res
 end
 puts "5-1: #{poly_reduce(polymer).size}"
 
