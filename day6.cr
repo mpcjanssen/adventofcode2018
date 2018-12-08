@@ -15,9 +15,11 @@ class Point
   def distance(p)
     (self.x - p.x).abs + (self.y - p.y).abs
   end
+
   def distances(points)
-      points.map { |other| {other, self.distance(other) }}
+    points.map { |other| {other, self.distance(other)} }
   end
+
   def closest(points : Array(Point))
     d = distances(points)
     min = d.min_by &.[1]
@@ -33,8 +35,6 @@ def parse_file
   points
 end
 
-
-
 points = parse_file
 max_x = (points.max_by &.x).x
 max_y = (points.max_by &.y).y
@@ -44,21 +44,21 @@ grid = Array.new(max_x) { Array.new(max_y, "") }
 # p max_y
 grid.each_with_index do |row, x|
   row.each_with_index do |cell, y|
-    closest = Point.new(x,y).closest(points)
+    closest = Point.new(x, y).closest(points)
     owner = closest.size == 1 ? closest[0].id : "."
     grid[x][y] = owner
   end
 end
 t = grid.transpose
-max_area =  ((grid.flatten - (grid[0] + grid[-1] + t[0] +t[-1]).uniq).group_by { |x| x}.map { |id,ids| {id, ids.size} }.max_by &.[1])[1]
+max_area = ((grid.flatten - (grid[0] + grid[-1] + t[0] + t[-1]).uniq).group_by { |x| x }.map { |id, ids| {id, ids.size} }.max_by &.[1])[1]
 puts "Day6-1: #{max_area}"
 
 MAX = 10000
 grid = Array.new(max_x) { Array.new(max_y, 0) }
 grid.each_with_index do |row, x|
   row.each_with_index do |cell, y|
-    grid[x][y] = (Point.new(x,y).distances(points).map &.[1]).sum
+    grid[x][y] = (Point.new(x, y).distances(points).map &.[1]).sum
   end
 end
 
-p grid.flatten.select { |x| x < MAX}.size
+p grid.flatten.select { |x| x < MAX }.size
