@@ -2,25 +2,61 @@ def parse_file
   File.read("input.8.txt").split.map &.to_i
 end
 
-nums = parse_file
+class Node
+  property children, metadata
+  def initialize()
+    @children = Array(Node).new
+    @metadata = Array(Int32).new
+  end
+  def add_node(n : Node)
+    @children << n
+  end
+  def add_meta(m : Array(Int32))
+    @metadata += m
+  end
+  def count_children()
+    @children.size
+  end
+  def metasum()
+    @metadata.sum
+  end
+  def sum1() : Int32
+    metasum + (children.map { |n| n.sum1.as(Int32) }).sum
+  end
+  def sum2() : Int32
+    return metasum if children.size == 0
+    indexes = @metadata.select { |x| x > 0}.map {|x| x-1}
+    total = 0
+    indexes.each do |i|
+      @children.fetch(i, nil).try do |c|
+        total += c.sum2()
+      end
+    end
+    total
+  end
+end
 
 def parse_node(nums)
-  metadata = Array(Int32).new
+  n = Node.new
   # p nums
-  children = nums.shift
-  metadata_size = nums.shift
+  children, metadata_size = nums.shift(2)
+  # p metadata_size
   # p children, metadata_size
   children.times do
     # p "--"
-    nums, md = parse_node(nums)
-    metadata = metadata + md
+    child, nums = parse_node(nums)
+    n.add_node(child)
   end
-  metadata_size.times do
-    metadata << nums.shift
-  end
+  md = nums.shift(metadata_size)
+  # p md
+  n.add_meta(md)
   # p "==="
   # p metadata,nums
-  {nums, metadata}
+  {n, nums}
 end
 
-p parse_node(nums)[1].sum
+nums = parse_file
+root,_ = parse_node(nums)
+
+puts "8-1: #{root.sum1}"
+puts "8-2: #{root.sum2}"
