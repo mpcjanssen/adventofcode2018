@@ -3,7 +3,7 @@ require "big"
 NUM_PLAYERS = 476i64
 LAST_POINTS = 71431i64
 
-class PlayState
+class Game
   @circle = Deque(Int64).new(1) {|j| j =0i64}
   def initialize(num_players, @last_marble : Int64 )
     @scores = Array(Array(Int64)).new(num_players) { |j| j = Array(Int64).new}
@@ -39,8 +39,8 @@ end
 
 # p PlayState.new(9,25).play.max
 # p PlayState.new(30,5807).play.max
-puts "Day 9-1: #{(PlayState.new(NUM_PLAYERS,LAST_POINTS).play.map &.sum).max}"
-t = (PlayState.new(NUM_PLAYERS,LAST_POINTS*100).play.map do |nums|
+puts "Day 9-1: #{(Game.new(NUM_PLAYERS,LAST_POINTS).play.map &.sum).max}"
+t = (Game.new(NUM_PLAYERS,LAST_POINTS*100).play.map do |nums|
   nums.map { |n| BigInt.new(n) }.sum 
 end)
 
