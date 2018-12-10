@@ -33,25 +33,21 @@ position=<-3,  6> velocity=< 2, -1>
 TEST
 
 class Particle
-  def initialize(@position : {Int32, Int32}, @velocity : {Int32, Int32})
-  end
-  def x
-    @position[0]
-  end
-  def y
-    @position[1]
+  getter x,y
+  def initialize(@x : Int32,@y : Int32,@vx : Int32, @vy : Int32)
   end
   def neighbour(other)
     case 
-    when x == other.x
-      return (y-other.y).abs == 1
-    when y == other.y
-      return (x-other.x).abs == 1
+    when @x == other.x
+      return (@y-other.y).abs == 1
+    when @y == other.y
+      return (@x-other.x).abs == 1
     else return false
     end
   end
   def step
-    @position = {x + @velocity[0],y + @velocity[1]}
+    @x += @vx
+    @y += @vy
   end
 end
 
@@ -63,7 +59,7 @@ class SkyView
       # p l
       /<\s*([-0-9]+),\s*([-0-9]+)>.*<\s*([-0-9]+),\s*([-0-9]+)>/.match(l).try do |m|
         # p "-------"
-        @particles << Particle.new({m[1].to_i,m[2].to_i}, {m[3].to_i,m[4].to_i})
+        @particles << Particle.new(m[1].to_i,m[2].to_i, m[3].to_i,m[4].to_i)
       end
     end
     # p @particles.size      
