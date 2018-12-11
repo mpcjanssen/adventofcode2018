@@ -57,8 +57,8 @@ MAX = 10000
 grid = Array.new(max_x) { Array.new(max_y, 0) }
 grid.each_with_index do |row, x|
   row.each_with_index do |cell, y|
-    grid[x][y] = (Point.new(x, y).distances(points).map &.[1]).sum
+    grid[x][y] = Point.new(x, y).distances(points).sum &.[1]
   end
 end
 
-p grid.flatten.select { |x| x < MAX }.size
+puts "Day6-1: #{grid.flatten.select { |x| x < MAX }.size}"

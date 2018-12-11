@@ -69,8 +69,8 @@ class SkyView
   end
   def run
     loop do
-    puts "t: #{@time}, coherence: #{coherence}" if @time % 1000 == 0
-    if coherence > 1.0
+    # puts "t: #{@time}, coherence: #{coherent?}" if @time % 1000 == 0
+    if coherent?
       render
       puts "Press <enter> for next coherent sample or x<enter> to break"
       break if gets == "x"
@@ -79,23 +79,25 @@ class SkyView
     @time += 1
     end
   end
-  def coherence
-    ns = (@particles.map { |x| neighbours(x).size })
-    # p ns
-    ns.sum.to_f / ns.size
+  def coherent?
+    min_y, max_y = (@particles.map &.y).minmax
+    max_y - min_y < 12
   end
+  # def coherence
+  #   ns = (@particles.map { |x| neighbours(x).size })
+  #   # p ns
+  #   ns.sum.to_f / ns.size
+  # end
   def neighbours(particle)
     @particles.select { |other| particle.neighbour(other)}
   end
   def render
-    min_x = (@particles.min_by &.x).x
-    min_y = (@particles.min_by &.y).y
-    max_x = (@particles.max_by &.x).x + 1
-    max_y = (@particles.max_by &.y).y + 1
-    puts "t: #{@time}, coherence: #{coherence}"
-    (min_y...max_y).each do |y|
+    min_x, max_x = (@particles.map &.x).minmax
+    min_y, max_y = (@particles.map &.y).minmax
+    puts "t: #{@time}, coherence: #{coherent?}"
+    (min_y..max_y).each do |y|
       line = Array(String).new
-      (min_x...max_x).each do |x|
+      (min_x..max_x+1).each do |x|
         if (@particles.select {|p| p.x == x && p.y == y}).size > 0
           line << "#"
         else
