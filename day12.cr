@@ -99,8 +99,8 @@ class Pots
     # p envs
     # p @rules
     if @deltas == REPEATING
-      p sum
-      p "repeating"
+      # p sum
+      # p "repeating"
       @min_pot += 1
       return true 
     end
@@ -114,8 +114,8 @@ class Pots
     end
     # p newpots
     @min_pot = newpots.min
-    p @min_pot
-    p sum
+    # p @min_pot
+    # p sum
     @deltas = newpots.map {|x| x - @min_pot}
     return false
   end
