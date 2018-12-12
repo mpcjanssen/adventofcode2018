@@ -12,13 +12,9 @@ def level(serial, x,y)
 end
 
 LEVELS = Array.new(SIZE+1) { |x| Array.new(SIZE+1) { |y| level(INPUT,x,y) }}
-# 
-p level(8,3,5)
-p level(57,122,79)
-p level(39,217,196)
-p level(71,101,153)
+
  
-# p levels
+# p LEVELS
 
 
 class Block
@@ -28,7 +24,9 @@ class Block
   end
 
   def max_power
-    @powers.max
+    m = @powers.max
+    {@powers.index(m).not_nil!, m}
+
   end
 
   def power(size)
@@ -36,18 +34,33 @@ class Block
   end
 
   def initialize(@x : Int32,@y : Int32)
+    # p "--------------------"
+    # p xy
     init_powers
   end
   def init_powers
-    max_size = [SIZE-@x, SIZE-@y].min
+    max_size = [SIZE-@x, SIZE-@y].min+1
     # p xy
     # p max_size
     (1..max_size).each do |size|
+      # p size
+      # p "+++++++++"
+      # p "#{max_size} --- #{size}"
       total = @powers[size-1]
-      (@x...(@x+size)).each { |x| total += LEVELS[x][@y+size-1] }
-      (@y...(@y+size)).each { |y| total += LEVELS[@x+size-1][@y] }
+      (@x...(@x+size-1)).each do |x| 
+        # p "#{x}, #{@y+size-1}"
+        total += LEVELS[x][@y+size-1]
+      end
+      (@y...(@y+size-1)).each do |y| 
+        # p "#{@x+size-1}, #{y}"
+        total += LEVELS[@x+size-1][y]
+      end
+      last = LEVELS[@x+size-1][@y+size-1]
+      # p last
+      total += last
       @powers << total
     end
+    # p @powers
 
   end
 end
@@ -60,3 +73,5 @@ blocks = Array(Block).new
 end
 
 puts "Day11-1: #{(blocks.sort_by &.power(3)).last.xy}"
+block = blocks.max_by &.max_power[1]
+puts "Day11-2: #{block.xy} size: #{block.max_power[0]}"
