@@ -81,14 +81,10 @@ class Pots
     end
   end
   def render
-    result = Array(Char).new
-    x,y = minmax
-    # p x,y
-    (x..y).each do |id|
-      result << charat(id)
-    end
-    p result.join
+    puts "#{@min_pot} #{@deltas}"
+    
   end
+
 
   def nextgen()
     # p @pots
@@ -104,6 +100,8 @@ class Pots
     end
     # p newpots
     @pots = newpots
+    @min_pot = @pots.min
+    @deltas = @pots.map {|id| id-@min_pot }
   end
 end
 
@@ -129,7 +127,7 @@ end
 pots = Pots.new(TEST_START, rules.to_a)
 5000000000.times do | t |
   puts "Day 12-1: #{pots.sum}" if t == 20
-pots.nextgen
+  pots.nextgen
   pots.render if t % 1000 == 0
 end
 
